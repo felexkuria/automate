@@ -30,11 +30,14 @@ def organize_files():
         elif file_name.lower().endswith('.pdf'):
             shutil.move(file_path, os.path.join(pdf_folder, file_name))
             print(f'Moved {file_name} to PDF_Files.')
+	elif (file_name.lower().endswith(('.heic', '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff'))):
+            shutil.move(file_path, os.path.join(heic_folder, file_name))
+            print(f'Moved {file_name} to Image_Files.')
 
         # Move HEIC files
-        elif file_name.lower().endswith('.heic'):
-            shutil.move(file_path, os.path.join(heic_folder, file_name))
-            print(f'Moved {file_name} to HEIC_Files.')
+        
+            
+         
 
 if __name__ == '__main__':
     organize_files()
