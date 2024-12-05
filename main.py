@@ -5,10 +5,12 @@ import shutil
 downloads_folder = os.path.expanduser('~/Downloads')
 mp3_folder = os.path.join(downloads_folder, 'MP3_Files')
 pdf_folder = os.path.join(downloads_folder, 'PDF_Files')
+heic_folder = os.path.join(downloads_folder, 'PIC_Files')
 
 # Create folders if they don't exist
 os.makedirs(mp3_folder, exist_ok=True)
 os.makedirs(pdf_folder, exist_ok=True)
+os.makedirs(heic_folder, exist_ok=True)
 
 # Function to move files to the correct folders
 def organize_files():
@@ -28,6 +30,11 @@ def organize_files():
         elif file_name.lower().endswith('.pdf'):
             shutil.move(file_path, os.path.join(pdf_folder, file_name))
             print(f'Moved {file_name} to PDF_Files.')
+
+        # Move HEIC files
+        elif file_name.lower().endswith('.heic'):
+            shutil.move(file_path, os.path.join(heic_folder, file_name))
+            print(f'Moved {file_name} to HEIC_Files.')
 
 if __name__ == '__main__':
     organize_files()
