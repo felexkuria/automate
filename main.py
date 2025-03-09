@@ -3,42 +3,39 @@ import shutil
 
 # Define the paths
 downloads_folder = os.path.expanduser('~/Downloads')
-mp3_folder = os.path.join(downloads_folder, 'MP3_Files')
-pdf_folder = os.path.join(downloads_folder, 'PDF_Files')
-heic_folder = os.path.join(downloads_folder, 'PIC_Files')
+file_types = {
+    'MP3_Files': ('.mp3',),
+    'PDF_Files': ('.pdf',),
+    'Image_Files': ('.heic', '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff'),
+    'Video_Files': ('.mp4', '.mov', '.avi', '.mkv', '.flv', '.wmv', '.webm', '.mpeg', '.mpg'),
+    'Document_Files': ('.docx', '.xlsx', '.pptx', '.txt', '.rtf', '.csv', '.md', '.odt', '.pages')
+}
 
-# Create folders if they don't exist
-os.makedirs(mp3_folder, exist_ok=True)
-os.makedirs(pdf_folder, exist_ok=True)
-os.makedirs(heic_folder, exist_ok=True)
+# Create necessary folders
+folders = {folder: os.path.join(downloads_folder, folder) for folder in file_types}
+for path in folders.values():
+    os.makedirs(path, exist_ok=True)
 
-# Function to move files to the correct folders
+# Function to organize files efficiently
 def organize_files():
     for file_name in os.listdir(downloads_folder):
         file_path = os.path.join(downloads_folder, file_name)
-
-        # Skip directories
-        if os.path.isdir(file_path):
+        if not os.path.isfile(file_path):  # Skip directories
             continue
 
-        # Move MP3 files
-        if file_name.lower().endswith('.mp3'):
-            shutil.move(file_path, os.path.join(mp3_folder, file_name))
-            print(f'Moved {file_name} to MP3_Files.')
+        for folder, extensions in file_types.items():
+            if file_name.lower().endswith(extensions):
+                target_folder = folders[folder]
+                
+                # Handle screenshots separately
+                if folder == 'Image_Files' and file_name.lower().startswith("screenshot"):
+                    target_folder = os.path.join(target_folder, 'Screenshots')
+                    os.makedirs(target_folder, exist_ok=True)
+                
+                shutil.move(file_path, os.path.join(target_folder, file_name))
+                print(f'Moved {file_name} to {target_folder}')
+                break  # Stop checking other types once matched
 
-        # Move PDF files
-        elif file_name.lower().endswith('.pdf'):
-            shutil.move(file_path, os.path.join(pdf_folder, file_name))
-            print(f'Moved {file_name} to PDF_Files.')
-	elif (file_name.lower().endswith(('.heic', '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff'))):
-            shutil.move(file_path, os.path.join(heic_folder, file_name))
-            print(f'Moved {file_name} to Image_Files.')
-
-        # Move HEIC files
-        
-            
-         
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     organize_files()
 
